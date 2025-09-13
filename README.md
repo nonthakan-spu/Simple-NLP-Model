@@ -9,6 +9,41 @@ import pandas as pd
 #ทำการโหลดชุดข้อมูลมาเก็บไว้ในตัวแปร ds
 ds = load_dataset("imdb")
 
-#ทำการแบ่งข้อมูลชุด train และ test ออกจากกัน
-ds_train, ds_test = ds["train"], ds["test"]
+#ทำการแบ่งข้อมูลชุด train และ test ออกจากกันและแปลงข้อมูลจาก DataDict เป็น DataFrame
+ds_train, ds_test = pd.DataFrame(ds["train"]), pd.DataFrame(ds["test"])
+```
+## ขั้นตอนที่ 2 ทำความสะอาดข้อมูล แบ่งข้อมูลและบันทึกชุดข้อมูล
+ลบข้อมูลที่ไม่จำเป็นออกไป เช่น tag HTML, ช่องว่าง หรือ ตัวอักษรพิเศษต่างๆ เพื่อทำให้ข้อมูลเตรียมพร้อมจะนำไปใช้ในการฝึกโมเดล เพื่อให้โมเดลเข้าใจและเรียนรู้ได้ตรงประเด็นมากที่สุด แบ่งข้อมูลจากชุด test 10% เพื่อเป็นชุด val (Validation) ใช้สำหรับประเมินประสิทธิภาพของโมเดลในระหว่างการฝึก
+```python
+import re
+from sklearn.model_selection import train_test_split
+
+#สร้างฟังก์ชันสำหรับการทำความสะอาดข้อมูล
+def clean(s: str) -> str:
+  #สำหรับลบ tag HTML และไม่แทนที่ในตำแหน่งที่ลบ
+  s = re.sub(r"<.*?>", "", s)
+  #สำหรับลบตัวอักษรทุกชนิดที่ไม่ใช่ตัวอักษร a-z, A-Z, 0-9 และ ช่องว่าง และแทนที่ด้วยช่องว่าง 1 ช่อง
+  s = re.sub(r"[^a-zA-Z0-9\s]", " ", s)
+  #สำหรับลบช่องว่างหลายๆ ช่องที่ติดกันและแทนที่ด้วยช่องว่างๆ 1 ช่อง รวมถึงลบช่องว่างในส่วนหัวและท้ายข้อความด้วย
+  s = re.sub(r"\s+", " ", s).strip()
+  #ส่งข้อความที่ทำความสะอาดแล้วคืนในรูปแบบที่เป็นตัวพิมพ์เล็กทั้งหมด
+  return s.lower()
+
+#ลูปข้อมูลภายใน ds_train และ ds_test เพื่อทำความสะอาดข้อมูลทั้งหมด
+for df in (ds_train, ds_test):
+  #ทำการแปลงข้อความเป็น string และส่งข้อมูลไปทำความที่ฟังก์ชัน clean
+  df["text"] = df["text"].astype(str).apply(clean)
+  #ทำการแปลง label เป็น integer
+  df["label"] = df["label"].astype(int)
+
+#แบ่งข้อมูลจากชุด test ไปยังชุด val 10% โดยอิงจาก label เพื่อให้สัดส่วนของข้อมูลมีความใกล้เคียงกัน
+ds_test, ds_val = train_test_split(test, test_size=0.1, random_state=42, stratify=test["label"])
+
+#บันทึกชุดข้อมูลเพื่อเก็บไว้ใช้ในครั้งหน้า
+#เปลี่ยนตำแหน่งที่เก็บเป็นของคุณเอง
+DIR = "/your/directory/path/"
+#เปลี่ยนชื่อไฟล์หรือจะไม่เปลี่ยนก็ได้
+ds_train.to_csv(DIR+"cleaned_train.csv")
+ds_val.to_csv(DIR+"cleaned_val.csv")
+ds_test.to_csv(DIR+"cleaned_test.csv")
 ```
