@@ -11,3 +11,4 @@ ds = load_dataset("imdb")
 
 #ทำการแบ่งข้อมูลชุด train และ test ออกจากกัน
 ds_train, ds_test = ds["train"], ds["test"]
+''' 
