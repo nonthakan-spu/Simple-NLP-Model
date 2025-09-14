@@ -38,7 +38,7 @@ for df in (ds_train, ds_test):
   df["label"] = df["label"].astype(int)
 
 #แบ่งข้อมูลจากชุด test ไปยังชุด val 10% โดยอิงจาก label เพื่อให้สัดส่วนของข้อมูลมีความใกล้เคียงกัน
-ds_test, ds_val = train_test_split(test, test_size=0.1, random_state=42, stratify=test["label"])
+ds_test, ds_val = train_test_split(ds_test, test_size=0.1, random_state=42, stratify=ds_test["label"])
 
 #บันทึกชุดข้อมูลเพื่อเก็บไว้ใช้ในครั้งหน้า
 #เปลี่ยนตำแหน่งที่เก็บเป็นของคุณเอง
