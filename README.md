@@ -16,6 +16,7 @@ ds_train, ds_test = pd.DataFrame(ds["train"]), pd.DataFrame(ds["test"])
 ลบข้อมูลที่ไม่จำเป็นออกไป เช่น tag HTML, ช่องว่าง หรือ ตัวอักษรพิเศษต่างๆ เพื่อทำให้ข้อมูลเตรียมพร้อมจะนำไปใช้ในการฝึกโมเดล เพื่อให้โมเดลเข้าใจและเรียนรู้ได้ตรงประเด็นมากที่สุด แบ่งข้อมูลจากชุด test 10% เพื่อเป็นชุด val (Validation) ใช้สำหรับประเมินประสิทธิภาพของโมเดลในระหว่างการฝึก
 ```python
 import re
+import pandas as pd
 from sklearn.model_selection import train_test_split
 
 #สร้างฟังก์ชันสำหรับการทำความสะอาดข้อมูล
@@ -46,4 +47,15 @@ DIR = "/your/directory/path/"
 ds_train.to_csv(DIR+"cleaned_train.csv")
 ds_val.to_csv(DIR+"cleaned_val.csv")
 ds_test.to_csv(DIR+"cleaned_test.csv")
+```
+## ขั้นตอนที่ 3 สร้าง Pipeline สำหรับโมเดลและ TF-IDF
+การสร้าง pipeline ที่เชื่อมต่อระหว่างโมเดลกับตัวแปลงข้อความเป็น vector จะทำให้เราเขียนโค้ดสั้นลงและทำให้งานง่ายขึ้น ลดโอกาสความผิดพลาดที่จะเกิดขึ้นระหว่างการแปลงข้อความและส่งไปยังโมเดลเพื่อฝึก
+```python
+import pandas as pd
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+
+
+
 ```
