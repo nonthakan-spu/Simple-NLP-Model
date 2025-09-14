@@ -56,6 +56,17 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
+#โหลดชุดข้อมูลที่ทำการบันทึกไว้
+DIR = "/your/directory/path/"
+train = pd.read_csv(DIR+"cleaned_train.csv")
+val = pd.read_csv(DIR+"cleaned_val.csv")
+test = pd.read_csv(DIR+"cleaned_test.csv")
 
+#สร้าง pipeline เชื่อมระหว่าง TF-IDF กับ LogisticRegression
+lr_model = Pipeline([
+    ("tfidf", TfidfVectorizer(ngram_range=(1,3), max_features=100_000, min_df=2, max_df=0.8)),
+    ("lr", LogisticRegression(max_iter=500, C=10.0, solver="liblinear", n_jobs=-1))
+])
 
+lr_model.fit()
 ```
