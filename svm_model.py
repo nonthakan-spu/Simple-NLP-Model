@@ -29,7 +29,7 @@ test_c_value = [0.1, 1.0, 10.0, 100.0]
 start = time()
 #สร้างลูปขึ้นมาเพื่อวนทดสอบค่า c แต่ละค่าว่าค่าใดส่งผลทำให้โมเดลมีประสิทธิภาพมากที่สุด(ในที่จะวัดด้วยค่า Accuracy) และทำการเก็บค่า c ที่ดีที่สุดและโมเดลที่ดีที่สุด
 for c_value in test_c_value:
-  #สร้าง pipeline เชื่อมระหว่าง TF-IDF กับ LogisticRegression
+  #สร้าง pipeline เชื่อมระหว่าง TF-IDF กับ SVM
   svm_model_temp = Pipeline([
       ("tfidf", TfidfVectorizer(ngram_range=(1,3), max_features=100_000, min_df=2, max_df=0.8)),
       ("svm", LinearSVC(max_iter=500, C=c_value, penalty='l2', dual=True))
