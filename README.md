@@ -110,3 +110,17 @@ print("Test Set Evaluate\n",classification_report(y_test, lr_pred))
 SAVE_DIR = "/your/directory/path/"
 dump(SAVE_DIR+"LogisticRegression_Model.joblib")
 ```
+ในส่วนของโมเดล SVM(Support Vector Matchine) ก็จะทำในลักษณะเดียวกันกับโมเดล LR(Logistic Regression) แต่จะมีบาง parameters ที่ไม่เหมือนกันสามารถดูตัวอย่างจากโค้ดด้านล่าง
+```python
+svm_model_temp = Pipeline([
+  ("tfidf", TfidfVectorizer(ngram_range=(1,3), max_features=100_000, min_df=2, max_df=0.8)),
+  ("svm", LinearSVC(max_iter=500, C=c_value, penalty='l2', dual=True))
+])
+```
+ส่วนโมเดล MNB(Multinomial Naive Bayes) จะมี parameters น้อยกว่า 2 โมเดลก่อนหน้า และจะเปลี่ยนตัวแปร C เป็น alpha แทนซึ่งมีความแตกต่างในด้านการทำงานและส่งผลต่อโมเดล (จะนำไปอธิบายเพิ่มเติมในส่วนถัดไป)
+```python
+mnb_model_temp = Pipeline([
+  ("tfidf", TfidfVectorizer(ngram_range=(1,3), max_features=100_000, min_df=2, max_df=0.8)),
+  ("mnb", MultinomialNB(alpha=alpha_value))
+])
+```
